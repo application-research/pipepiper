@@ -1,13 +1,20 @@
 #![allow(warnings)]
 
 mod args;
+mod client;
+mod server;
 
 #[tokio::main]
 async fn main() {
     let args = args::parse_args();
 
-    match args.mode {
-        args::PiperMode::Server => todo!(),
-        args::PiperMode::Client => todo!(),
+    let ret = match args.mode {
+        args::PiperMode::Client => client::start_client(args).await,
+        args::PiperMode::Server => server::start_server(args).await,
     };
+
+    if let Err(why) = ret {
+        eprintln!("{why:#}");
+        std::process::exit(1);
+    }
 }

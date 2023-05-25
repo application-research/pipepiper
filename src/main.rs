@@ -1,20 +1,15 @@
-#![allow(warnings)]
-
 mod args;
 mod client;
 mod server;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> simple_eyre::Result<()> {
+    simple_eyre::install()?;
+
     let args = args::parse_args();
 
-    let ret = match args.mode {
+    match args.mode {
         args::PiperMode::Client => client::start_client(args).await,
         args::PiperMode::Server => server::start_server(args).await,
-    };
-
-    if let Err(why) = ret {
-        eprintln!("{why:#}");
-        std::process::exit(1);
     }
 }

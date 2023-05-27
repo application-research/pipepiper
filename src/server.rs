@@ -1,16 +1,16 @@
 use super::args::Args;
-use quinn::{Connection, Endpoint, ServerConfig};
+use crate::utils::server_config;
+use config::Config;
+use quinn::{Connection, Endpoint};
 use simple_eyre::{
     eyre::{eyre, WrapErr},
     Result,
 };
 use tokio::io::{AsyncWriteExt, BufWriter};
 
-const RECV_CHUNK_SIZE: usize = 128 * (1 << 20);
-
-pub async fn start_server(args: Args) -> Result<()> {
+pub async fn start_server(args: Args, config: Config) -> Result<()> {
     let (server_config, _server_cert) =
-        configure_server().wrap_err("failed to create server config")?;
+        server_config(&config).wrap_err("failed to create server config")?;
     let endpoint =
         Endpoint::server(server_config, args.addr).wrap_err("failed to create server endpoint")?;
 
@@ -21,11 +21,18 @@ pub async fn start_server(args: Args) -> Result<()> {
         .await
         .wrap_err("failed bind the the server socket")?;
 
-    receive_stream(&mut connection).await?;
+    receive_stream(
+        &mut connection,
+        config
+            .get_int("buffer_cap")
+            .map(|val| val as usize)
+            .unwrap_or(crate::utils::DEFAULT_BUFFER_CAP),
+    )
+    .await?;
     Ok(())
 }
 
-async fn receive_stream(connection: &mut Connection) -> Result<()> {
+async fn receive_stream(connection: &mut Connection, buf_size: usize) -> Result<()> {
     let mut recv = connection
         .accept_uni()
         .await
@@ -33,7 +40,7 @@ async fn receive_stream(connection: &mut Connection) -> Result<()> {
     let mut writer = BufWriter::new(tokio::io::stdout());
 
     while let Some(mut chunk) = recv
-        .read_chunk(RECV_CHUNK_SIZE, true)
+        .read_chunk(buf_size, true)
         .await
         .wrap_err("failed to read a chunk from uni-directional stream")?
     {
@@ -47,16 +54,4 @@ async fn receive_stream(connection: &mut Connection) -> Result<()> {
         .flush()
         .await
         .wrap_err("failed to flush out to stdout")
-}
-
-fn configure_server() -> Result<(ServerConfig, Vec<u8>)> {
-    let cert = rcgen::generate_simple_self_signed(vec!["localhost".into()])?;
-    let cert_der = cert.serialize_der().unwrap();
-    let priv_key = cert.serialize_private_key_der();
-    let priv_key = rustls::PrivateKey(priv_key);
-    let cert_chain = vec![rustls::Certificate(cert_der.clone())];
-
-    let server_config = ServerConfig::with_single_cert(cert_chain, priv_key)?;
-
-    Ok((server_config, cert_der))
 }

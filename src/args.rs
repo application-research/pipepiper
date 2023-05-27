@@ -14,6 +14,7 @@ argwerk::define! {
         pub mode: PiperMode,
         #[required = "run mode"]
         pub addr: SocketAddr,
+        pub config: Option<String>,
     }
     /// Print the help text.
     ["-h" | "--help"] => {
@@ -28,6 +29,10 @@ argwerk::define! {
     ["send", ip, port] => {
         mode = Some(PiperMode::Client);
         addr = Some(format!("{ip}:{port}").parse::<SocketAddr>()?);
+    }
+    /// Configuration file.
+    ["--config", file] => {
+        config = Some(file);
     }
 }
 

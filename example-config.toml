@@ -1,0 +1,10 @@
+# example configuration file
+
+buffer_cap                   = 268_435_456     # 256 MB
+stream_receive_window        = 18_087_936_000
+receive_window               = 18_500_000_000
+send_window                  = 18_500_000_000
+datagram_receive_buffer_size = 268_435_456     # 256 MB
+datagram_send_buffer_size    = 268_435_456     # 256 MB
+max_idle_timeout             = 60              # in seconds
+keep_alive_interval          = 30              # in seconds

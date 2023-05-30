@@ -44,6 +44,6 @@ intercontinental distances, but can be used for anything you can use a UNIX
 pipe to achieve!
 
 ## Credits
-Developed by @brkp and @Zorlin.
+Developed by [@brkp](https://github.com/brkp) and [@Zorlin].(https://github.com/Zorlin)
 
-Development funded by @Zorlin and @application-research.
+Development funded by [@Zorlin](https://github.com/Zorlin) and [@application-research](https://github.com/application-research).

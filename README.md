@@ -42,3 +42,8 @@ For config file specification, see the `example-config.toml` file.
 This tool is intended to be used to speed up ZFS send/receive over
 intercontinental distances, but can be used for anything you can use a UNIX
 pipe to achieve!
+
+## Credits
+Developed by @brkp and @Zorlin.
+
+Development funded by @Zorlin and @application-research.

@@ -45,7 +45,9 @@ This tool is intended to be used to speed up ZFS send/receive over
 intercontinental distances, but can be used for anything you can use a UNIX
 pipe to achieve!
 
-## Credits
+## Credits and License
+Made available under the terms of, at your choice and preference, the MIT or Apache software licenses.
+
 Developed by [@brkp](https://github.com/brkp) and [@Zorlin](https://github.com/Zorlin).
 
 Development funded by [@Zorlin](https://github.com/Zorlin) and [@application-research](https://github.com/application-research).

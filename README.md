@@ -28,6 +28,8 @@ This will install a binary named `ppr` to Cargo's local set of installed
 binaries. The same binary can be found in the `target/release` folder.
 
 ## Usage
+Copy `example-config.toml` from PipePiper's repository to `config.toml` and edit the settings as appropriate.
+
 Once installed, start the receiver:
 
 * `ppr recv 0.0.0.0 8000 --config config.toml`
